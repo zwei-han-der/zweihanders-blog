@@ -679,15 +679,19 @@ function renderPosts(posts) {
   postList.innerHTML = '';
 
   if (!posts.length) {
+    const emptyStateItem = document.createElement('li');
     const emptyState = document.createElement('div');
     emptyState.className = 'empty-state';
     emptyState.textContent = 'nenhum post encontrado. ajuste os filtros ou clique em "escrever" para publicar';
-    postList.append(emptyState);
+    emptyStateItem.append(emptyState);
+    postList.append(emptyStateItem);
     return;
   }
 
   posts.forEach((post) => {
-    postList.append(createPostCard(post));
+    const item = document.createElement('li');
+    item.append(createPostCard(post));
+    postList.append(item);
   });
 }
 
