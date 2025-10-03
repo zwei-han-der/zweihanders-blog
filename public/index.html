@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zweihander's Blog</title>
+  <meta name="description" content="Blog técnico de Zweihander com notas sobre desenvolvimento full-stack." />
+
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://zweihanders-blog.onrender.com/" />
+
+  <meta property="og:url" content="https://zweihanders-blog.onrender.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Zweihander's Blog" />
+  <meta property="og:description" content="Notas sobre desenvolvimento full-stack." />
+  <meta property="og:image" content="https://zweihanders-blog.onrender.com/og-image.png" />
+  <meta property="og:locale" content="pt_BR" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content="zweihanders-blog.onrender.com" />
+  <meta property="twitter:url" content="https://zweihanders-blog.onrender.com/" />
+  <meta name="twitter:title" content="Zweihander's Blog" />
+  <meta name="twitter:description" content="Notas sobre desenvolvimento full-stack." />
+  <meta name="twitter:image" content="https://zweihanders-blog.onrender.com/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Zweihander's Blog",
+      "url": "https://zweihanders-blog.onrender.com/",
+      "description": "Blog técnico com notas sobre desenvolvimento full-stack.",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@type": "Person",
+        "name": "Zweihander"
+      }
+    }
+  </script>
   <style>
     :root {
       color-scheme: light;
@@ -241,6 +273,9 @@
     .post-list {
       display: grid;
       gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
 
     .post-card {
@@ -642,7 +677,7 @@
           <h2 class="section-heading__title posts__title" id="posts-title">posts</h2>
           <span class="section-heading__divider" aria-hidden="true"></span>
         </div>
-        <div class="post-list" id="post-list" role="list"></div>
+        <ul class="post-list" id="post-list"></ul>
       </section>
       <aside class="filters-panel" aria-labelledby="filters-title">
         <div class="filters-panel__group">
