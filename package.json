@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "bun run src/server.ts",
+    "build": "bun run scripts/build.ts",
     "test": "bun test"
   },
   "devDependencies": {
