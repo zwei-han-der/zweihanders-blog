@@ -1,0 +1,96 @@
+bun test v1.2.23 (cf136713)
+
+tests\posts.test.ts:
+(pass) postsRouter > responds to OPTIONS for collection
+(pass) postsRouter > responds to OPTIONS for item
+(pass) postsRouter > returns empty list when there are no posts [15.00ms]
+(pass) postsRouter > fetches a pre-seeded post from the database
+(pass) postsRouter > rejects invalid item id [16.00ms]
+(pass) postsRouter > handles CRUD lifecycle for posts [47.00ms]
+(pass) postsRouter > rejects invalid POST payloads
+(pass) postsRouter > rejects invalid JSON payloads
+(pass) postsRouter > requires at least one field for PATCH
+(pass) postsRouter > returns method not allowed for unsupported methods [78.00ms]
+(pass) postsRouter > returns null for unrelated routes
+DEBUG title filter {
+  body: [
+    {
+      id: 34,
+      title: "Primeiro Post",
+      content: "Conte├║do 1",
+      createdAt: "2025-10-02T01:59:20.000Z",
+      updatedAt: "2025-10-02T01:59:20.000Z",
+      tags: [],
+    }
+  ],
+  transient: [
+    {
+      id: 34,
+      title: "Primeiro Post",
+      content: "Conte├║do 1",
+      createdAt: "2025-10-02T01:59:20.000Z",
+      updatedAt: "2025-10-02T01:59:20.000Z",
+      tags: [],
+    }
+  ],
+}
+(pass) postsRouter > filters posts by title query [78.00ms]
+(pass) postsRouter > filters posts by tag [16.00ms]
+(pass) postsRouter > lists tags [15.00ms]
+
+tests\script.test.ts:
+[status] carregando posts...
+168 |       }
+169 |     } catch (error) {
+170 |       console.error(error);
+171 |     }
+172 | 
+173 |     throw new Error(errorMessage);
+                    ^
+error: not found
+      at request (C:\Users\Zweihander\blog\public\script.js:173:15)
+      at async refreshTags (C:\Users\Zweihander\blog\public\script.js:219:24)
+
+[status] pronto
+(pass) formatDateTime > formats numeric timestamp
+(pass) formatDateTime > returns fallback for invalid input
+(pass) getDisplayTitle > returns original when within limit
+(pass) getDisplayTitle > truncates and appends ellipsis when over limit
+(pass) request > executes GET and parses JSON
+(pass) request > sends POST body as JSON
+(pass) request > throws on non-ok response
+(pass) modal controls > open and close modal toggle dataset
+(pass) refreshPosts > renders posts into provided container
+168 |       }
+169 |     } catch (error) {
+170 |       console.error(error);
+171 |     }
+172 | 
+173 |     throw new Error(errorMessage);
+                    ^
+error: not found
+      at request (C:\Users\Zweihander\blog\public\script.js:173:15)
+      at async refreshPosts (C:\Users\Zweihander\blog\public\script.js:200:25)
+
+267 | 
+268 |     await new Promise((resolve) => setTimeout(resolve, 300));
+269 |     await Promise.resolve();
+270 |     await Promise.resolve();
+271 | 
+272 |     expect(status.textContent).toBe('pronto');
+                                     ^
+error: expect(received).toBe(expected)
+
+Expected: "pronto"
+Received: "erro ao carregar: not found"
+
+      at <anonymous> (C:\Users\Zweihander\blog\tests\script.test.ts:272:32)
+(fail) live search input > triggers refresh after debounce [312.00ms]
+
+1 tests failed:
+(fail) live search input > triggers refresh after debounce [312.00ms]
+
+ 23 pass
+ 1 fail
+ 107 expect() calls
+Ran 24 tests across 2 files. [949.00ms]

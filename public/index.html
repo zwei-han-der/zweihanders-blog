@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zweihander's Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f5f5f5;
+      --surface: #ffffff;
+      --ink: #0b0b0b;
+      --ink-soft: #2a2a2a;
+      --ink-muted: #5c5c5c;
+      --border: #0b0b0b;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--ink);
+    }
+
+    a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    button,
+    .nav__link {
+      font: inherit;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      text-transform: lowercase;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    .nav__link:focus-visible {
+      outline: 2px solid var(--border);
+      outline-offset: 4px;
+    }
+
+    button:hover,
+    a:hover,
+    .nav__link:hover {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 4rem 2rem 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 1rem;
+      width: 90%;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-end;
+    }
+
+    .nav__link {
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      padding: 0 0 0.25rem;
+      text-transform: lowercase;
+    }
+
+    .nav__link--active {
+      border-bottom-color: var(--border);
+    }
+
+    .main {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 2.75fr) minmax(240px, 1fr);
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .posts-section {
+      display: grid;
+      gap: 1.75rem;
+    }
+
+    .posts__title {
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .filters-panel {
+      display: grid;
+      gap: 2.5rem;
+    }
+
+    .filters-panel__group {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .filters-panel__title {
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .section-heading__title {
+      margin: 0;
+    }
+
+    .section-heading__divider {
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .search-form {
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .search-form__field {
+      position: relative;
+      display: block;
+    }
+
+    .search-form input {
+      padding: 0.6rem 3rem 0.6rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      min-width: 0;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .search-form input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    .search-form input::-ms-clear,
+    .search-form input::-ms-reveal {
+      display: none;
+    }
+
+    .search-form input[type='search']::-moz-search-clear {
+      display: none;
+    }
+
+    .search-form__clear {
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      transform: translateY(-50%);
+      width: 1.6rem;
+      height: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      font-size: 1.05rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .search-form__clear:hover,
+    .search-form__clear:focus-visible {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .tag-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag-pill {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.8rem;
+      text-transform: lowercase;
+      cursor: pointer;
+    }
+
+    .tag-pill[data-active='true'] {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .post-list {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      border: 2px solid var(--border);
+      background: var(--surface);
+      padding: 1.75rem 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .post-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .post-card__title {
+      font-size: clamp(1.2rem, 2vw, 1.4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0;
+    }
+
+    .post-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 0.6rem;
+    }
+
+    .post-card__meta-item {
+      white-space: nowrap;
+    }
+
+    .post-card__meta-separator {
+      color: var(--ink-muted);
+      font-size: 0.65rem;
+      transform: translateY(-1px);
+    }
+
+    .post-card__content {
+      white-space: normal;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      margin: 1rem -1.5rem 0;
+      padding: 1rem 1.5rem 0;
+      overflow-wrap: anywhere;
+    }
+
+    .post-card__content>*:first-child {
+      margin-top: 0;
+    }
+
+    .post-card__content>*:last-child {
+      margin-bottom: 0;
+    }
+
+    .post-card__content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .post-card__content th,
+    .post-card__content td {
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .post-card__content thead th {
+      background: rgba(0, 0, 0, 0.04);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+    }
+
+    .post-card__content tbody tr:nth-child(even) {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .post-card__content code {
+      font-family: 'DM Mono', 'Fira Code', 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92rem;
+      background: none;
+      padding: 0;
+      border: none;
+      color: inherit;
+    }
+
+    .post-card__content .code-block {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      margin: 1.5rem 0;
+      background: var(--surface);
+    }
+
+    .code-block__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: space-between;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .code-block__lang {
+      flex: 1;
+    }
+
+    .code-block__copy {
+      font: inherit;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .code-block__copy:hover,
+    .code-block__copy:focus-visible {
+      background: rgba(0, 0, 0);
+      outline: none;
+    }
+
+    .code-block__copy[data-state='copied'] {
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--surface);
+    }
+
+    .code-block__copy[data-state='error'] {
+      background: #b00020;
+      color: #fff;
+    }
+
+    .code-block__body {
+      overflow-x: auto;
+      padding: 0.9rem 1.2rem;
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .code-block__body code {
+      display: block;
+      line-height: 1.65;
+      white-space: pre;
+      color: var(--ink);
+    }
+
+    .post-card__actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .edit-form {
+      display: none;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .edit-form[data-open='true'] {
+      display: grid;
+    }
+
+    .edit-form label {
+      display: grid;
+      gap: 0.5rem;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+
+    .edit-form input,
+    .edit-form textarea,
+    .modal input,
+    .modal textarea {
+      font: inherit;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+    }
+
+    .edit-form textarea,
+    .modal textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .editor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .editor-grid__pane {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+    }
+
+    .editor-grid__pane--preview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+
+    .editor-preview__title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .editor-preview {
+      display: grid;
+      gap: 0.75rem;
+      min-height: 160px;
+    }
+
+    .editor-preview__status {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+    }
+
+    .editor-preview__content {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      min-height: 120px;
+      overflow: auto;
+    }
+
+    .editor-preview[data-state='loading'] .editor-preview__status {
+      color: var(--ink);
+    }
+
+    .editor-preview[data-state='error'] .editor-preview__status {
+      color: #b00020;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .edit-form input:focus,
+    .edit-form textarea:focus,
+    .modal input:focus,
+    .modal textarea:focus {
+      outline: 2px solid var(--border);
+      outline-offset: 2px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.75);
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal[data-open='true'] {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal__content {
+      border: 2px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      width: min(560px, 90vw);
+      padding: 2rem;
+      display: grid;
+      gap: 1.5rem;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+    }
+
+    .modal__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .modal__title {
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
+
+    .modal__close {
+      border: 1px solid var(--border);
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal__form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .modal__form label {
+      display: grid;
+      gap: 0.5rem;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      border: 2px dashed var(--border);
+      padding: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @media (max-width: 960px) {
+      .main {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .search-form {
+        grid-template-columns: 1fr auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header {
+        padding: 1.5rem;
+      }
+
+      .header__top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="header">
+      <span class="brand">Zweihander's Blog</span>
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="nav__link nav__link--active" href="#posts">home</a>
+        <button class="nav__link" data-action="compose" data-auth-only="true" type="button">escrever</button>
+        <button class="nav__link" data-action="open-login" data-guest-only="true" type="button">login</button>
+        <button class="nav__link" data-action="logout" data-auth-only="true" type="button">logout</button>
+      </nav>
+    </header>
+
+    <main class="main" id="posts">
+      <section class="posts-section" aria-labelledby="posts-title">
+        <div class="section-heading">
+          <h2 class="section-heading__title posts__title" id="posts-title">posts</h2>
+          <span class="section-heading__divider" aria-hidden="true"></span>
+        </div>
+        <div class="post-list" id="post-list" role="list"></div>
+      </section>
+      <aside class="filters-panel" aria-labelledby="filters-title">
+        <div class="filters-panel__group">
+          <div class="section-heading">
+            <h2 class="section-heading__title filters-panel__title" id="filters-title">buscar título</h2>
+            <span class="section-heading__divider" aria-hidden="true"></span>
+          </div>
+          <form class="search-form" id="search-form" autocomplete="off">
+            <label class="search-form__field">
+              <span class="visually-hidden">buscar título</span>
+              <input type="search" name="q" placeholder="digite para filtrar" />
+              <button class="search-form__clear" type="button" data-action="clear-search" aria-label="limpar busca">
+                ×
+              </button>
+            </label>
+          </form>
+        </div>
+        <div class="filters-panel__group">
+          <div class="section-heading">
+            <h2 class="section-heading__title filters-panel__title">categorias</h2>
+            <span class="section-heading__divider" aria-hidden="true"></span>
+          </div>
+          <div class="tag-pills" id="tag-pills" aria-label="tags"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="modal" id="compose-modal" aria-hidden="true">
+    <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="compose-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="compose-title">escrever post</h2>
+        <button class="modal__close" type="button" data-action="close-compose">×</button>
+      </header>
+      <form class="modal__form" id="compose-form" autocomplete="off">
+        <label>
+          título
+          <input type="text" name="title" required placeholder="título do post" />
+        </label>
+        <div class="editor-grid">
+          <div class="editor-grid__pane">
+            <label>
+              conteúdo
+              <textarea name="content" required placeholder="conteúdo"></textarea>
+            </label>
+            <label>
+              tags
+              <input type="text" name="tags" placeholder="ex: tecnologia, backend" />
+            </label>
+          </div>
+          <div class="editor-grid__pane editor-grid__pane--preview">
+            <span class="editor-preview__title">pré-visualização</span>
+            <div class="editor-preview" id="compose-preview" data-state="empty">
+              <span class="editor-preview__status" data-role="status">aguardando conteúdo</span>
+              <div class="editor-preview__content"></div>
+            </div>
+          </div>
+        </div>
+        <div class="editor-actions">
+          <button type="button" data-action="close-compose">cancelar</button>
+          <button type="submit">publicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="login-modal" aria-hidden="true">
+    <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="login-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="login-title">acessar</h2>
+        <button class="modal__close" type="button" data-action="close-login">×</button>
+      </header>
+      <form class="modal__form" id="login-form" autocomplete="off">
+        <label>
+          key hash
+          <input type="password" name="keyHash" required placeholder="cole sua chave" />
+        </label>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end">
+          <button type="button" data-action="close-login">cancelar</button>
+          <button type="submit">entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/script.js" type="module"></script>
+</body>
+
+</html>

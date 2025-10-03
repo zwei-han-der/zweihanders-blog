@@ -1,0 +1,25 @@
+{
+  "name": "blog",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.31.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "latest",
+    "@types/sanitize-html": "^2.16.0",
+    "drizzle-orm": "^0.44.5",
+    "marked": "^16.3.0",
+    "pg": "^8.12.0",
+    "sanitize-html": "^2.17.0"
+  }
+}
