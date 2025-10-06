@@ -65,6 +65,8 @@ class StubElement {
 }
 
 function createStubDocument() {
+  const documentListeners = new Map<string, Set<(event: any) => void>>();
+
   return {
     createElement(tag: string) {
       return new StubElement(tag);
@@ -74,6 +76,22 @@ function createStubDocument() {
     },
     querySelectorAll() {
       return [];
+    },
+    addEventListener(type: string, handler: (event: any) => void) {
+      if (!documentListeners.has(type)) {
+        documentListeners.set(type, new Set());
+      }
+      documentListeners.get(type)!.add(handler);
+    },
+    removeEventListener(type: string, handler: (event: any) => void) {
+      documentListeners.get(type)?.delete(handler);
+    },
+    dispatchEvent(event: { type: string }) {
+      const handlers = documentListeners.get(event.type);
+      if (!handlers) {
+        return;
+      }
+      handlers.forEach((handler) => handler({ ...event }));
     },
   };
 }
