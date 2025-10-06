@@ -737,34 +737,6 @@ function createPostCard(post) {
   const isAuthenticated = authState.authenticated;
   const contentHtml = typeof post.contentHtml === 'string' && post.contentHtml.trim() !== '' ? post.contentHtml : '';
 
-  if (!isAuthenticated) {
-    const content = document.createElement('div');
-    content.className = 'post-card__content';
-    if (contentHtml) {
-      content.innerHTML = contentHtml;
-    } else {
-      content.textContent = safeString(post.content);
-    }
-
-    header.append(titleGroup);
-    card.append(header, content);
-    return card;
-  }
-
-  const actions = document.createElement('div');
-  actions.className = 'post-card__actions';
-
-  const editButton = document.createElement('button');
-  editButton.type = 'button';
-  editButton.textContent = 'editar';
-
-  const deleteButton = document.createElement('button');
-  deleteButton.type = 'button';
-  deleteButton.textContent = 'excluir';
-
-  actions.append(editButton, deleteButton);
-
-  header.append(titleGroup, actions);
   const content = document.createElement('div');
   content.className = 'post-card__content';
   if (contentHtml) {
@@ -773,9 +745,24 @@ function createPostCard(post) {
     content.textContent = safeString(post.content);
   }
 
+  const surface = document.createElement('div');
+  surface.className = 'post-card__surface';
+  surface.append(content);
+
+  header.append(titleGroup);
+  card.append(header);
+
+  if (!isAuthenticated) {
+    card.append(surface);
+    return card;
+  }
+
+  const editFormId = `post-${post.id}-edit`;
+
   const editForm = document.createElement('form');
   editForm.className = 'edit-form';
   editForm.autocomplete = 'off';
+  editForm.id = editFormId;
 
   const titleField = document.createElement('label');
   titleField.textContent = 'título';
@@ -804,35 +791,61 @@ function createPostCard(post) {
   tagsInput.value = formatTagsForInput(post.tags);
   tagsField.append(tagsInput);
 
-  const controls = document.createElement('div');
-  controls.style.display = 'flex';
-  controls.style.gap = '0.75rem';
-
   const saveButton = document.createElement('button');
   saveButton.type = 'submit';
-  saveButton.dataset.variant = 'primary';
-  saveButton.textContent = ':: salvar';
+  saveButton.textContent = 'salvar';
+  saveButton.className = 'post-card__button';
+  saveButton.setAttribute('form', editFormId);
 
   const cancelButton = document.createElement('button');
   cancelButton.type = 'button';
-  cancelButton.dataset.variant = 'ghost';
-  cancelButton.textContent = ':: cancelar';
+  cancelButton.textContent = 'cancelar';
+  cancelButton.className = 'post-card__button';
+  cancelButton.setAttribute('form', editFormId);
 
-  controls.append(saveButton, cancelButton);
+  editForm.append(titleField, contentField, tagsField);
 
-  editForm.append(titleField, contentField, tagsField, controls);
+  const footer = document.createElement('div');
+  footer.className = 'post-card__footer';
 
-  editButton.addEventListener('click', () => {
-    const open = editForm.dataset.open === 'true';
-    editForm.dataset.open = String(!open);
-    if (!open) {
+  const footerLeft = document.createElement('div');
+  footerLeft.className = 'post-card__footer-group post-card__footer-group--left';
+  footerLeft.dataset.visible = 'false';
+  footerLeft.append(saveButton, cancelButton);
+
+  const footerRight = document.createElement('div');
+  footerRight.className = 'post-card__footer-group post-card__footer-group--right';
+
+  const editButton = document.createElement('button');
+  editButton.type = 'button';
+  editButton.textContent = 'editar';
+  editButton.className = 'post-card__button';
+
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.textContent = 'excluir';
+  deleteButton.className = 'post-card__button';
+
+  footerRight.append(editButton, deleteButton);
+
+  footer.append(footerLeft, footerRight);
+
+  const setEditMode = (open) => {
+    editForm.dataset.open = String(open);
+    footerLeft.dataset.visible = open ? 'true' : 'false';
+    if (open) {
       titleInput.focus();
       titleInput.select();
     }
+  };
+
+  editButton.addEventListener('click', () => {
+    const open = editForm.dataset.open === 'true';
+    setEditMode(!open);
   });
 
   cancelButton.addEventListener('click', () => {
-    editForm.dataset.open = 'false';
+    setEditMode(false);
     titleInput.value = safeString(post.title);
     contentInput.value = safeString(post.content);
     tagsInput.value = formatTagsForInput(post.tags);
@@ -862,7 +875,7 @@ function createPostCard(post) {
       });
 
       setStatus(`post #${post.id} atualizado`);
-      editForm.dataset.open = 'false';
+      setEditMode(false);
       await refreshPosts();
       await refreshTags();
     } catch (error) {
@@ -894,7 +907,10 @@ function createPostCard(post) {
     }
   });
 
-  card.append(header, content, editForm);
+  setEditMode(false);
+
+  surface.append(editForm);
+  card.append(surface, footer);
   return card;
 }
 
@@ -1016,6 +1032,7 @@ function formatTagsForDisplay(list) {
     .filter(Boolean)
     .map((value) => value.toLowerCase());
 }
+
 
 function ensureComposeFormHandler() {
   if (boundComposeForm && boundComposeForm !== composeForm) {
